@@ -3,7 +3,6 @@ import StockHoldingList from '../../components/blockComponents/stockHoldingList'
 import {fetchStockHoldings} from './service';
 import {UserHoldingType} from '../../globalData/globalProps';
 import ContainerView from '../../components/baseComponents/ContainerView';
-import logger from '../../utilities/logger';
 import {isArray} from '../../utilities/utils';
 import styles from './styles';
 import AppText from '../../components/baseComponents/AppText';

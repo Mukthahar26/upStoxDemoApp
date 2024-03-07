@@ -4,7 +4,7 @@ export type UserHoldingType = {
   ltp: number;
   avgPrice: number;
   close: number;
-  currentValue?: number;
-  investmentValue?: number;
-  profitLossValue?: number;
+  currentValue: number;
+  investmentValue: number;
+  profitLossValue: number;
 };

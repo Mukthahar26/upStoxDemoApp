@@ -73,7 +73,9 @@ android {
     ndkVersion rootProject.ext.ndkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
-
+    aaptOptions {
+        cruncherEnabled = false
+    }
     namespace "com.upstoxdemoapp"
     defaultConfig {
         applicationId "com.upstoxdemoapp"
