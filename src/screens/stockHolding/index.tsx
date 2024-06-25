@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {memo, useEffect, useState} from 'react';
 import StockHoldingList from '../../components/blockComponents/stockHoldingList';
 import {fetchStockHoldings} from './service';
 import {UserHoldingType} from '../../globalData/globalProps';
@@ -6,7 +6,8 @@ import ContainerView from '../../components/baseComponents/ContainerView';
 import {isArray} from '../../utilities/utils';
 import styles from './styles';
 import AppText from '../../components/baseComponents/AppText';
-import {View} from 'react-native';
+import {FlatList, View} from 'react-native';
+import {fetchGetRequest} from '../../fetchApicalls/axiosInstance';
 
 const StockHolding = () => {
   const [holdingResponse, setHoldingResponse] = useState<UserHoldingType[]>([]);
@@ -14,16 +15,30 @@ const StockHolding = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    fetchHoldings();
+    fetchData();
   }, []);
 
-  const fetchHoldings = async () => {
+  const fetchData = async () => {
     setLoading(true);
-    setError('');
-    const result = await fetchStockHoldings();
-    if (isArray(result)) setHoldingResponse(result as UserHoldingType[]);
-    else setError('Something went wrong');
+    const response = await fetchGetRequest(
+      'https://api.test.datacite.org/providers/caltech/dois?page[size]=10000',
+    );
+    console.log('fkaresponsekjlfjaslkfdjalk :', response);
+    setHoldingResponse(response.data);
     setLoading(false);
+  };
+
+  const renderItem = ({item}: any) => {
+    const {nameType, name, givenName, familyName} = item.attributes.creators[0];
+    console.log('fkakjlfjaslkfdjalk :', item.attributes.creators);
+    return (
+      <View style={styles.row}>
+        <AppText style={styles.color}>{nameType}</AppText>
+        <AppText style={styles.color}>{name}</AppText>
+        <AppText style={styles.color}>{givenName}</AppText>
+        <AppText style={styles.color}>{familyName}</AppText>
+      </View>
+    );
   };
 
   return (
@@ -31,10 +46,11 @@ const StockHolding = () => {
       isLoading={loading}
       isScrollRequired={false}
       containerStyle={styles.container}>
-      <View style={styles.title}>
-        <AppText style={styles.titleLabel}>Upstox Holding</AppText>
-      </View>
-      <StockHoldingList error={error} list={holdingResponse} />
+      <FlatList
+        contentContainerStyle={{flexGrow: 1}}
+        data={holdingResponse}
+        renderItem={renderItem}
+      />
     </ContainerView>
   );
 };
